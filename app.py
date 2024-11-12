@@ -2,12 +2,12 @@ import streamlit as st
 import requests
 import fitz  # PyMuPDF
 import docx
-import torch
-
-torch.cuda.empty_cache()
 
 # FastAPI 서버 URL
-API_URL = "http://localhost:8000/predict"
+ip = "34.81.26.181" # ip 바뀔때마다 수정
+API_URL = f"http://{ip}:8002/predict"
+
+
 
 # PDF 파일에서 텍스트 추출
 def extract_text_from_pdf(file):
@@ -25,12 +25,16 @@ def extract_text_from_docx(file):
 
 # 텍스트를 점자로 번역 (FastAPI 서버에 요청)
 def translate_to_braille(text):
-    response = requests.post(API_URL, json={"input_text": text})
-    if response.status_code == 200:
-        return response.json()["prediction"]
-    else:
-        st.error("번역 서버에서 오류가 발생했습니다.")
+    print("Text to be translated:", text)  # 전송할 텍스트 확인용
+    try:
+        response = requests.post(API_URL, json={"input_text": text})
+        response.raise_for_status()  # 에러 발생 시 예외 발생
+        return response.json().get("prediction", "")
+    except requests.exceptions.RequestException as e:
+        st.error(f"번역 서버에서 오류가 발생했습니다: {e}")
         return ""
+
+
 
 # Streamlit 인터페이스 구성
 st.title("한국어 점자 번역기")
@@ -59,4 +63,7 @@ if uploaded_file:
     if text:
         st.subheader("점자 번역 결과")
         braille_text = translate_to_braille(text)
-        st.text_area("점자 번역 텍스트", braille_text, height=300)
+        
+        # 점자만 추출
+        braille_translation = braille_text.split("Braille Translation:")[-1].strip()
+        st.text_area(" ",braille_translation, height=300)
