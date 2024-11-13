@@ -80,7 +80,11 @@ async def predict(request: Request):
 
     print("Received input_text:", text)
 
-    input_text = f"Convert the following Korean sentence to Braille.\n\nKorean Sentence: {text}"
+    input_text = f"""
+Convert the following Korean sentence to Braille.
+
+Korean Sentence: "{text}"
+Braille Translation: """
 
     inputs = tokenizer(input_text, return_tensors="pt").to("cuda")
     text_streamer = TextStreamer(tokenizer)
