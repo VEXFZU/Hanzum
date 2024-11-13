@@ -4,9 +4,7 @@ import fitz  # PyMuPDF
 import docx
 
 # FastAPI 서버 URL
-ip = "34.81.26.181" # ip 바뀔때마다 수정
-API_URL = f"http://{ip}:8002/predict"
-
+API_URL = f"https://api.vxfz.top/predict"
 
 
 # PDF 파일에서 텍스트 추출
@@ -18,10 +16,12 @@ def extract_text_from_pdf(file):
         text += page.get_text()
     return text
 
+
 # DOCX 파일에서 텍스트 추출
 def extract_text_from_docx(file):
     doc = docx.Document(file)
     return "\n".join([para.text for para in doc.paragraphs])
+
 
 # 텍스트를 점자로 번역 (FastAPI 서버에 요청)
 def translate_to_braille(text):
@@ -35,7 +35,6 @@ def translate_to_braille(text):
         return ""
 
 
-
 # Streamlit 인터페이스 구성
 st.title("한국어 점자 번역기")
 st.write("PDF, TXT 또는 DOCX 파일을 업로드하여 점자로 변환해보세요.")
@@ -44,7 +43,7 @@ uploaded_file = st.file_uploader("파일을 업로드하세요 (PDF, TXT, DOCX)"
 
 if uploaded_file:
     file_type = uploaded_file.name.split('.')[-1]
-    
+
     if file_type == 'pdf':
         text = extract_text_from_pdf(uploaded_file)
     elif file_type == 'txt':
@@ -63,7 +62,7 @@ if uploaded_file:
     if text:
         st.subheader("점자 번역 결과")
         braille_text = translate_to_braille(text)
-        
+
         # 점자만 추출
         braille_translation = braille_text.split("Braille Translation:")[-1].strip()
-        st.text_area(" ",braille_translation, height=300)
+        st.text_area(" ", braille_translation, height=300)
