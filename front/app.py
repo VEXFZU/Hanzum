@@ -1,39 +1,6 @@
 import streamlit as st
-import requests
-import fitz  # PyMuPDF
-import docx
-
-# FastAPI 서버 URL
-API_URL = f"https://api.vxfz.top/predict"
-
-
-# PDF 파일에서 텍스트 추출
-def extract_text_from_pdf(file):
-    text = ""
-    pdf_document = fitz.open(stream=file.read(), filetype="pdf")
-    for page_num in range(pdf_document.page_count):
-        page = pdf_document[page_num]
-        text += page.get_text()
-    return text
-
-
-# DOCX 파일에서 텍스트 추출
-def extract_text_from_docx(file):
-    doc = docx.Document(file)
-    return "\n".join([para.text for para in doc.paragraphs])
-
-
-# 텍스트를 점자로 번역 (FastAPI 서버에 요청)
-def translate_to_braille(text):
-    print("Text to be translated:", text)  # 전송할 텍스트 확인용
-    try:
-        response = requests.post(API_URL, json={"input_text": text})
-        response.raise_for_status()  # 에러 발생 시 예외 발생
-        return response.json().get("prediction", "")
-    except requests.exceptions.RequestException as e:
-        st.error(f"번역 서버에서 오류가 발생했습니다: {e}")
-        return ""
-
+from document import extract_text_from_pdf, extract_text_from_docx
+from converter import translate_to_braille
 
 # Streamlit 인터페이스 구성
 st.title("한국어 점자 번역기")
@@ -61,7 +28,7 @@ if uploaded_file:
     # 점자 번역 결과 출력
     if text:
         st.subheader("점자 번역 결과")
-        braille_text = translate_to_braille(text)
+        braille_text = translate_to_braille(text, st)
 
         # 점자만 추출
         braille_translation = braille_text.split("Braille Translation:")[-1].strip()
