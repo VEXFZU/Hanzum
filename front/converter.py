@@ -1,7 +1,7 @@
 import requests
 
 # FastAPI 서버 URL
-API_URL = f"https://api.vxfz.top/predict"
+API_URL = f"http://35.221.231.240:8002/predict"
 
 
 # 텍스트를 점자로 번역 (FastAPI 서버에 요청)
@@ -11,9 +11,13 @@ def translate_to_braille(text, st):
         response = requests.post(API_URL, json={"input_text": text})
         response.raise_for_status()  # 에러 발생 시 예외 발생
         braille_text = response.json().get("prediction", "")
+
+        # <pad>와 </s> 제거
+        braille_text = braille_text.replace('<pad>', '').replace('</s>', '').strip()
+
         print(braille_text)
-        braille_translation = braille_text.split("Braille Translation: ")[-1].strip()
-        return braille_translation
+        # braille_translation = braille_text.split("Braille Translation: ")[-1].strip()
+        return braille_text
     except requests.exceptions.RequestException as e:
         st.error(f"번역 서버에서 오류가 발생했습니다: {e}")
         return ""
@@ -33,7 +37,7 @@ def convert_braille_text_to_brf(unicode_brailles: list[str],
     ret = str()
 
     def add_new_line_if_needed(t):
-        if t[-1] != '\n':
+        if t and t[-1] != '\n':
             return t + '\n'
         else:
             return t

@@ -32,6 +32,9 @@ text = process_uploaded_file(uploaded_file)
 if "translated_unicode" not in st.session_state:
     st.session_state.translated_unicode = None
 
+if "translated_unicode_tt" not in st.session_state:
+    st.session_state.translated_unicode_tt = None
+
 if text and st.session_state.translated_unicode is None:
     st.session_state.translated_unicode = temp_gather_results(text, st)
 
@@ -39,12 +42,13 @@ translated_unicode = st.session_state.translated_unicode
 
 
 with tab0:
-    tt_text = st.text_area("텍스트를 입력하세요", text, height=200)
+    tt_text = st.text_area("텍스트를 입력하세요", height=200)
     tt_code = st.code("", language="braille")
-    if st.button("변환"):
-        st.session_state.translated_unicode = temp_gather_results(tt_text, st)
-        # ToDo :
-        tt_code.code('\n'.join(st.session_state.translated_unicode))
+    if st.button("변환") and tt_text:
+        st.session_state.translated_unicode_tt = temp_gather_results(tt_text, st)
+    # ToDo : Recover original positions of sentences.
+    if st.session_state.translated_unicode_tt:
+        tt_code.code('\n'.join(st.session_state.translated_unicode_tt))
 
 # 탭 1: 기본 변환
 with tab1:
@@ -52,7 +56,7 @@ with tab1:
         # 추출된 텍스트 확인
         st.subheader("추출된 텍스트")
         st.write(text)
-        st.code(translated_unicode, language="braille")
+        st.code('\n'.join(translated_unicode), language="braille")
     else:
         st.session_state.translated_unicode = None
 
@@ -77,4 +81,3 @@ with tab3:
             file_name="output.brf",
             mime="text/plain",
         )
-
