@@ -37,11 +37,15 @@ def convert_braille_text_to_brf(unicode_brailles: list[str],
     ret = str()
 
     def add_new_line_if_needed(t):
-        if t and t[-1] != '\n':
-            return t + '\n'
+        if t:
+            if t[-1] != '\n':
+                return t + '\n'
+            else:
+                return t
         else:
-            return t
-
+            return '\n'
+          
+          
     num_line = 0
     ascii_brailles = []
     # if line is logner than char_per_line, split it into multiple lines
