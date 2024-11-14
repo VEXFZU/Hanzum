@@ -47,7 +47,7 @@ Ask for the token to set it as an environment variable. It can't be shared in pu
 #### Run
 
 ```bash
-uvicorn main:app --host 0.0.0.0 # 이름 변경
+uvicorn api.main:app --host 0.0.0.0
 ```
 
 #### Test
@@ -67,7 +67,13 @@ time curl -X 'POST' \
 #### Installation
 
 ```bash
-pip install streamlit PyMuPDF python-docx
+pip install streamlit PyMuPDF python-docx kss
+```
+
+If it's on linux or mac, you may install python-mecab-kor.
+
+```bash
+pip install python-mecab-kor
 ```
 
 #### Run
