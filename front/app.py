@@ -32,4 +32,4 @@ if uploaded_file:
 
         # 점자만 추출
         braille_translation = braille_text.split("Braille Translation:")[-1].strip()
-        st.text_area(" ", braille_translation, height=300)
+        st.code(braille_translation, language="braille")
