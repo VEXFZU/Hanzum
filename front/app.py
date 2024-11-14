@@ -1,6 +1,6 @@
 import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
-from converter import translate_to_braille
+from split_merge import temp_merge_results, temp_gather_results
 
 # Streamlit 인터페이스 구성
 st.title("한국어 점자 번역기")
@@ -26,10 +26,26 @@ if uploaded_file:
     st.write(text if text else "텍스트가 포함된 파일인지 확인해 주세요.")
 
     # 점자 번역 결과 출력
+    st.subheader("점자 번역 결과")
+    if "translated_unicode" not in st.session_state:
+        st.session_state.translated_unicode = None
     if text:
-        st.subheader("점자 번역 결과")
-        braille_text = translate_to_braille(text, st)
-
-        # 점자만 추출
-        braille_translation = braille_text.split("Braille Translation:")[-1].strip()
-        st.code(braille_translation, language="braille")
+        if st.session_state.translated_unicode is None:
+            st.session_state.translated_unicode = temp_gather_results(text, st)
+        translated_unicode = st.session_state.translated_unicode
+        st.download_button(
+            label="Download BRL",
+            data=temp_merge_results(translated_unicode, False),
+            file_name="output.brl",
+            mime="text/plain",
+        )
+        st.download_button(
+            label="Download BRF",
+            data=temp_merge_results(translated_unicode, True),
+            file_name="output.brf",
+            mime="text/plain",
+        )
+        if st.button("Show Braille Translation"):
+            st.code(translated_unicode, language="braille")
+    else:
+        st.session_state.translated_unicode = None
