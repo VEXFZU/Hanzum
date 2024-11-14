@@ -17,7 +17,7 @@ def split_text(text: str) -> list[str]:
 # ToDo: Enqueue split texts.
 # ToDo: Dequeue results and merge them.
 # ToDo: Write merged results to a file.
-def temp_gather_results(long_text, st, is_brf=True):
+def temp_gather_results(long_text, st):
     list_text = split_text(long_text)
     unicode_brailles = [translate_to_braille(i, st) for i in list_text]
     return unicode_brailles

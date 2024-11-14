@@ -11,7 +11,8 @@ def translate_to_braille(text, st):
         response = requests.post(API_URL, json={"input_text": text})
         response.raise_for_status()  # 에러 발생 시 예외 발생
         braille_text = response.json().get("prediction", "")
-        braille_translation = braille_text.split("Braille Translation:")[-1].strip()
+        print(braille_text)
+        braille_translation = braille_text.split("Braille Translation: ")[-1].strip()
         return braille_translation
     except requests.exceptions.RequestException as e:
         st.error(f"번역 서버에서 오류가 발생했습니다: {e}")

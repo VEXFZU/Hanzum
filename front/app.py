@@ -2,13 +2,15 @@ import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
 from split_merge import temp_merge_results, temp_gather_results
 
-# Streamlit 인터페이스 구성
-st.title("한국어 점자 번역기")
-st.write("PDF, TXT 또는 DOCX 파일을 업로드하여 점자로 변환해보세요.")
 
-uploaded_file = st.file_uploader("파일을 업로드하세요 (PDF, TXT, DOCX)", type=["pdf", "txt", "docx"])
+st.title("한국어 점자 번역기⠨⠎⠢⠨")
 
-if uploaded_file:
+# 탭 생성
+tab0, tab1, tab2, tab3 = st.tabs(["단문 점역", "파일 점역 보기", "BRL 다운로드", "BRF 다운로드"])
+
+def process_uploaded_file(uploaded_file):
+    if not uploaded_file:
+        return None
     file_type = uploaded_file.name.split('.')[-1]
 
     if file_type == 'pdf':
@@ -21,31 +23,58 @@ if uploaded_file:
         st.error("지원하지 않는 파일 형식입니다.")
         st.stop()
 
-    # 추출된 텍스트 확인
-    st.subheader("추출된 텍스트")
-    st.write(text if text else "텍스트가 포함된 파일인지 확인해 주세요.")
+    return text
 
-    # 점자 번역 결과 출력
-    st.subheader("점자 번역 결과")
-    if "translated_unicode" not in st.session_state:
-        st.session_state.translated_unicode = None
+st.write("PDF, TXT 또는 DOCX 파일을 업로드하여 점자로 변환해보세요.")
+uploaded_file = st.file_uploader("파일을 업로드하세요 (PDF, TXT, DOCX)", type=["pdf", "txt", "docx"])
+text = process_uploaded_file(uploaded_file)
+
+if "translated_unicode" not in st.session_state:
+    st.session_state.translated_unicode = None
+
+if text and st.session_state.translated_unicode is None:
+    st.session_state.translated_unicode = temp_gather_results(text, st)
+
+translated_unicode = st.session_state.translated_unicode
+
+
+with tab0:
+    tt_text = st.text_area("텍스트를 입력하세요", text, height=200)
+    tt_code = st.code("", language="braille")
+    if st.button("변환"):
+        st.session_state.translated_unicode = temp_gather_results(tt_text, st)
+        # ToDo :
+        tt_code.code('\n'.join(st.session_state.translated_unicode))
+
+# 탭 1: 기본 변환
+with tab1:
     if text:
-        if st.session_state.translated_unicode is None:
-            st.session_state.translated_unicode = temp_gather_results(text, st)
-        translated_unicode = st.session_state.translated_unicode
+        # 추출된 텍스트 확인
+        st.subheader("추출된 텍스트")
+        st.write(text)
+        st.code(translated_unicode, language="braille")
+    else:
+        st.session_state.translated_unicode = None
+
+# 탭 2: brl 변환
+with tab2:
+    if text and translated_unicode:
+        st.header("brl 변환")
         st.download_button(
             label="Download BRL",
             data=temp_merge_results(translated_unicode, False),
             file_name="output.brl",
             mime="text/plain",
         )
+
+# 탭 3: brf 변환
+with tab3:
+    if text and translated_unicode:
+        st.header("brf 변환")
         st.download_button(
             label="Download BRF",
             data=temp_merge_results(translated_unicode, True),
             file_name="output.brf",
             mime="text/plain",
         )
-        if st.button("Show Braille Translation"):
-            st.code(translated_unicode, language="braille")
-    else:
-        st.session_state.translated_unicode = None
+
