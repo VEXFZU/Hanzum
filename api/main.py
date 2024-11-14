@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from transformers import TextStreamer
 from fastapi.responses import Response
 
-from api.model.llama import model, tokenizer, stopping_criteria
+from model.llama import model, tokenizer, stopping_criteria #from api.model.llama로 되어 있던 것에서 같은 위치이므로 api 생략
 
 # FastAPI 앱 인스턴스 생성
 app = FastAPI()
