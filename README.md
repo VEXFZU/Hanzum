@@ -47,7 +47,7 @@ Ask for the token to set it as an environment variable. It can't be shared in pu
 #### Run
 
 ```bash
-uvicorn api_server:app --host 0.0.0.0
+uvicorn main:app --host 0.0.0.0 # 이름 변경
 ```
 
 #### Test
