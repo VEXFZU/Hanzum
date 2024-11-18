@@ -25,4 +25,6 @@ def temp_gather_results(long_text, st):
 def temp_merge_results(unicode_brailles, is_brf=True):
     if is_brf:
         return convert_braille_text_to_brf(unicode_brailles)
-    return convert_unicode_braille_to_ascii_braille(unicode_brailles)
+    else:
+        return '\n'.join([convert_unicode_braille_to_ascii_braille(i)
+                          for i in unicode_brailles])
