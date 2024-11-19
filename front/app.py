@@ -2,11 +2,23 @@ import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
 from split_merge import temp_merge_results, temp_gather_results
 
-
 st.title("한국어 점자 번역기⠨⠎⠢⠨")
+
+if "api_url" not in st.session_state:
+    st.session_state.api_url = None
+
+api_url = st.text_input("API URL을 입력하세요.")
+
+_default_url = "https://api.vxfz.top/predict"
+
+if api_url:
+    st.session_state.api_url = api_url
+else:
+    st.session_state.api_url = _default_url
 
 # 탭 생성
 tab0, tab1, tab2, tab3 = st.tabs(["단문 점역", "파일 점역 보기", "BRL 다운로드", "BRF 다운로드"])
+
 
 def process_uploaded_file(uploaded_file):
     if not uploaded_file:
@@ -25,6 +37,7 @@ def process_uploaded_file(uploaded_file):
 
     return text
 
+
 st.write("PDF, TXT 또는 DOCX 파일을 업로드하여 점자로 변환해보세요.")
 uploaded_file = st.file_uploader("파일을 업로드하세요 (PDF, TXT, DOCX)", type=["pdf", "txt", "docx"])
 text = process_uploaded_file(uploaded_file)
@@ -39,7 +52,6 @@ if text and st.session_state.translated_unicode is None:
     st.session_state.translated_unicode = temp_gather_results(text, st)
 
 translated_unicode = st.session_state.translated_unicode
-
 
 with tab0:
     tt_text = st.text_area("텍스트를 입력하세요", height=200)
@@ -81,4 +93,3 @@ with tab3:
             file_name="output.brf",
             mime="text/plain",
         )
-
