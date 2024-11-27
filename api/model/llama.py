@@ -1,7 +1,5 @@
 import torch
-from transformers import (
-    StoppingCriteria, StoppingCriteriaList
-)
+from transformers import TextStreamer
 
 from unsloth import FastLanguageModel
 
@@ -38,17 +36,26 @@ model = FastLanguageModel.get_peft_model(
     loftq_config=None,
 )
 
-class StopOnToken(StoppingCriteria):
-    def __init__(self, stop_token_id):
-        self.stop_token_id = stop_token_id
-
-    def __call__(self, input_ids, scores, **kwargs):
-        return self.stop_token_id in input_ids[0]
-
-# 추론에 사용할 정지 기준 설정
-stop_token = "<|end_of_text|>"
-stop_token_id = tokenizer.encode(stop_token, add_special_tokens=False)[0]
-stopping_criteria = StoppingCriteriaList([StopOnToken(stop_token_id)])
-
 # 모델을 추론 모드로 전환
 FastLanguageModel.for_inference(model)
+
+
+def translate(text):
+    input_text = f"""
+Convert the following Korean sentence to Braille.
+
+Korean Sentence: "{text}"
+Braille Translation: """
+
+    inputs = tokenizer(input_text, return_tensors="pt").to("cuda")
+    text_streamer = TextStreamer(tokenizer)
+
+    output = model.generate(
+        **inputs,
+        streamer=text_streamer,
+    )
+
+    prediction = tokenizer.decode(output[0], skip_special_tokens=True)
+    prediction = prediction.split("Braille Translation: ")[-1].strip()
+
+    return prediction

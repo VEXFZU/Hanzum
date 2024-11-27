@@ -1,8 +1,7 @@
 from fastapi import FastAPI, Request
-from transformers import TextStreamer
 from fastapi.responses import Response
 
-from api.model.llama import model, tokenizer, stopping_criteria
+from api.model import translate
 
 # FastAPI 앱 인스턴스 생성
 app = FastAPI()
@@ -27,20 +26,6 @@ async def predict(request: Request):
     
     print("Received input_text:", text)
     
-    input_text = f"""
-Convert the following Korean sentence to Braille.
+    prediction = translate(text)
 
-Korean Sentence: "{text}"
-Braille Translation: """
-    
-    inputs = tokenizer(input_text, return_tensors="pt").to("cuda")
-    text_streamer = TextStreamer(tokenizer)  
-
-    output = model.generate(
-        **inputs,
-        streamer=text_streamer,
-        stopping_criteria=stopping_criteria
-    )
-
-    prediction = tokenizer.decode(output[0], skip_special_tokens=True)
     return {"prediction": prediction}
