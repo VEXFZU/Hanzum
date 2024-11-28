@@ -23,10 +23,12 @@ def convert_unicode_braille_to_ascii_braille(unicode_braille):
         k: v for k, v in zip("⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿",
                              " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=")
     }
-    return ''.join(table.get(c, c) for c in unicode_braille)
+    ret = ''.join(table.get(c, c) for c in unicode_braille['braille'])
+    ret += unicode_braille['sep']
+    return ret
 
 
-def convert_braille_text_to_brf(unicode_brailles: list[str],
+def convert_braille_text_to_brf(unicode_brailles: list[dict[str, str]],
                                 char_per_line: int = 32,
                                 line_per_page: int = 26) -> str:
     ret = str()

@@ -1,8 +1,8 @@
 import os
 from transformers import T5ForConditionalGeneration, AutoTokenizer
 
-_model_name_or_path = os.environ.get("VXFZ_TRANSLATOR_MODEL_T5_NAME", "azaraks/t5-xlarge-ko-kb")
-_max_length = int(os.environ.get("VXFZ_TRANSALTOR_MODEL_T5_MAX_LENGTH", "256"))
+_model_name_or_path = os.environ.get("VXFZ_TRANSLATOR_MODEL_NAME", "azaraks/t5-xlarge-ko-kb")
+_max_length = int(os.environ.get("VXFZ_TRANSALTOR_MODEL_MAX_LENGTH", "256"))
 _max_input_length = _max_length >> 2
 
 model = T5ForConditionalGeneration.from_pretrained(_model_name_or_path).to('cuda')

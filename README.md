@@ -8,7 +8,7 @@
 점자교정사 자격시험 정답율 80점을 달성할 정도로 높은 정확도를 자랑합니다.   
 20 tokens/s 이상의 속도로 점자를 생성할 수 있는 점역엔진입니다.   
 점자시장은 산업 파이가 작고 기술 개발이 어려워 하드웨어 개발에 그치는 경우가 많았는데요,   
-하드웨어에 적합한 소프트웨어 발달이 미진했던 점자 서비스를 활성화시키기 위해 오픈소스로 공개합니다.   
+하드웨어에 적합한 소프트웨어 발달이 미진했던 점자 서비스를 활성화시키기 위해 오픈소스로 공개합니다.
 
 ## 성능
 
@@ -20,11 +20,11 @@
 
 이를 사용하여 측정한 결과는 다음과 같습니다.
 
-| 점역엔진               | 정답율   | 평균 WER | 평균 CER |
-|----------------------|-------|--------|--------|
+| 점역엔진              | 정답율   | 평균 WER | 평균 CER |
+|-------------------|-------|--------|--------|
 | D사 점역엔진           | 22.6% | 0.15   | 0.07   |
-| 한점 두점, Llama 3-8B  | 51.5% | 0.16   | 0.06   |
-| 한점 두점, t5-xlarge   | 85.5% | 0.04   | 0.01   |
+| 한점 두점, Llama 3-8B | 51.5% | 0.16   | 0.06   |
+| 한점 두점, t5-xlarge  | 85.5% | 0.04   | 0.01   |
 
 특히 t5-xlarge 기반 모델의 정답율이 80%를 넘어 3급 점역사 합격 기준인 70%를 훌쩍 넘었다는 점이 가장 고무적입니다.
 
@@ -74,7 +74,13 @@ You can access the Streamlit app at `http://localhost:8501`.
 * VM Machine Type: g2-standard-8 (8 vCPUs, 32 GB memory)
 
 1. Proceed automatic driver installation.
-2. Install torch.
+2. Clone this repository.
+
+```bash
+git clone https://github.com/VEXFZU/Hanzum
+```
+
+3. Install torch.
 
 ```bash
 pip install torch --index-url https://download.pytorch.org/whl/cu124
@@ -93,29 +99,29 @@ sudo apt update
 sudo apt -y install cuda-toolkit-12-4
 ```
 
-3. Install other packages
+4. Install other packages
 
 ```bash
 pip install fastapi uvicorn
 ```
 
-4. If you're going to use llama model, install unsloth too.
+5. If you're going to use llama model, install unsloth too.
 
 ```bash
 pip install unsloth
 ```
 
-5. Set environment variables.
+6. Set environment variables.
 
 ```bash
 export VXFZ_TRANSLATOR_MODEL=t5  # must be set. t5 or llama.
 ```
 
-Export optional variables if needed.
+7. Export optional variables if needed.
 
 ```bash
-export VXFZ_TRANSLATOR_MODEL_T5_NAME=/path/to/model  # default is azaraks/t5-xlarge-ko-kb.
-export VXFZ_TRANSALTOR_MODEL_T5_MAX_LENGTH=512  # default is 256.
+export VXFZ_TRANSLATOR_MODEL_NAME=/path/to/model  # default is azaraks/t5-xlarge-ko-kb.
+export VXFZ_TRANSALTOR_MODEL_MAX_LENGTH=512  # default is 256.
 ```
 
 ##### Run
@@ -140,20 +146,29 @@ time curl -X 'POST' \
 
 ##### Installation
 
+1. Clone this repository.
+
 ```bash
-pip install streamlit PyMuPDF python-docx kss
+git clone https://github.com/VEXFZU/Hanzum
 ```
 
-If it's on linux or mac, you may install python-mecab-kor.
+2. Install required packages.
 
 ```bash
-pip install python-mecab-kor
+pip install streamlit PyMuPDF python-docx transformers
 ```
 
-If you're running your own inference server, you need to set the environment variable.
+3. Set up mandatory environment variables.
 
 ```bash
-VXFZ_TRANSLATOR_API_URL=http://localhost:8000
+VXFZ_TRANSLATOR_MODEL_NAME=/path/to/model  # default is azaraks/t5-xlarge-ko-kb.
+VXFZ_TRANSALTOR_MODEL_MAX_LENGTH=512  # default is 256.
+```
+
+4. If you're running your own inference server, you need to set the environment variable accordingly.
+
+```bash
+VXFZ_TRANSLATOR_API_URL=http://localhost:8000  # If you're running your own inference server on same machine.
 ```
 
 ##### Run

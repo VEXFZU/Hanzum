@@ -1,15 +1,16 @@
+import os
 import torch
 from transformers import TextStreamer
 
 from unsloth import FastLanguageModel
 
-# 최대 시퀀스 길이 및 데이터 타입 설정
-max_seq_length = 4096
+_model_name = os.environ.get("VXFZ_TRANSLATOR_MODEL_NAME", "doiee/llama3-8b-instruct-ko-to-braille-checkpoint-9500")
+_max_seq_length = int(os.environ.get("VXFZ_TRANSALTOR_MODEL_MAX_LENGTH", "0")) or 4096
 
 # 모델과 토크나이저 로드
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name="doiee/llama3-8b-instruct-ko-to-braille-checkpoint-9500",
-    max_seq_length=max_seq_length,
+    model_name=_model_name,
+    max_seq_length=_max_seq_length,
     dtype=torch.bfloat16,
     load_in_4bit=True,
 )
