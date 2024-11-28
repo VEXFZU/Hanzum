@@ -20,14 +20,13 @@
 
 이를 사용하여 측정한 결과는 다음과 같습니다.
 
-| 점역엔진            | 정답 문항 수    | 정답율   | 평균 WER | 평균 CER |
-|--------------------|----------------|-------|--------|--------|
-| D사 점역엔진         | 36             | 21.6% | 0.15   | 0.07   |
-| Hanzum, Llama 3-8B | 82             | 49.1% | 0.16   | 0.06   |
-| Hanzum, t5-xlarge  | 134            | 80.2% | 0.06   | 0.02   |
+| 점역엔진               | 정답율   | 평균 WER | 평균 CER |
+|----------------------|-------|--------|--------|
+| D사 점역엔진           | 22.6% | 0.15   | 0.07   |
+| 한점 두점, Llama 3-8B  | 51.5% | 0.16   | 0.06   |
+| 한점 두점, t5-xlarge   | 85.5% | 0.04   | 0.01   |
 
 특히 t5-xlarge 기반 모델의 정답율이 80%를 넘어 3급 점역사 합격 기준인 70%를 훌쩍 넘었다는 점이 가장 고무적입니다.
-공개 예정인 차기 버전에서는 85점 이상의 정답율을 보이고 있습니다.
 
 ## 기능
 
@@ -147,6 +146,12 @@ If it's on linux or mac, you may install python-mecab-kor.
 
 ```bash
 pip install python-mecab-kor
+```
+
+If you're running your own inference server, you need to set the environment variable.
+
+```bash
+VXFZ_TRANSLATOR_API_URL=http://localhost:8000
 ```
 
 ##### Run
