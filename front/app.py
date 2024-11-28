@@ -2,7 +2,7 @@ import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
 from split_merge import temp_merge_results, temp_gather_results
 
-st.title("한국어 점자 번역기⠨⠎⠢⠨")
+st.title("한점 두점 ⠚⠒⠨⠎⠢ ⠊⠍⠨⠎⠢")
 
 if "api_url" not in st.session_state:
     st.session_state.api_url = None
@@ -75,7 +75,7 @@ with tab1:
 # 탭 2: brl 변환
 with tab2:
     if text and translated_unicode:
-        st.header("brl 변환")
+        st.header("BRL 변환")
         st.download_button(
             label="Download BRL",
             data=temp_merge_results(translated_unicode, False),
@@ -86,7 +86,7 @@ with tab2:
 # 탭 3: brf 변환
 with tab3:
     if text and translated_unicode:
-        st.header("brf 변환")
+        st.header("BRF 변환")
         st.download_button(
             label="Download BRF",
             data=temp_merge_results(translated_unicode, True),
