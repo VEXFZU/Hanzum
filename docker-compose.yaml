@@ -21,3 +21,5 @@ services:
       context: ./front
     ports:
       - "8501:8501"
+    environment:
+      - VXFZ_TRANSLATOR_API_URL=${VXFZ_TRANSLATOR_API_URL}

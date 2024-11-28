@@ -1,21 +1,13 @@
+import os
 import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
 from split_merge import temp_merge_results, temp_gather_results
 import chardet
 
-st.title("한점 두점 ⠚⠒⠨⠎⠢ ⠊⠍⠨⠎⠢")
+st.title("🌱 한점 두점 ⠚⠒⠨⠎⠢ ⠊⠍⠨⠎⠢")
 
 if "api_url" not in st.session_state:
-    st.session_state.api_url = None
-
-api_url = st.text_input("API URL을 입력하세요.")
-
-_default_url = "https://api.vxfz.top/predict"
-
-if api_url:
-    st.session_state.api_url = api_url
-else:
-    st.session_state.api_url = _default_url
+    st.session_state.api_url = os.environ.get("VXFZ_TRANSLATOR_API_URL")
 
 # 탭 생성
 tab0, tab1, tab2, tab3 = st.tabs(["단문 점역", "파일 점역 보기", "BRL 다운로드", "BRF 다운로드"])
