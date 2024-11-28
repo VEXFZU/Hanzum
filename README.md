@@ -1,10 +1,10 @@
-# 🌱한점 두점 ⠚⠒⠨⠎⠢⠀⠊⠍⠨⠎⠢ (Hanzum)
+# 🌱 한점 두점 ⠚⠒⠨⠎⠢⠀⠊⠍⠨⠎⠢ (Hanzum)
 
 *한점 두점*은 transformer 모델을 사용해 한국어 텍스트, PDF 파일 등을 점자로 점역해 주는 서비스 입니다.
 
 ## 소개
 
-높은 정확도와 빠른 생성 속도의 점자 엔진, "한점두점"을 소개합니다.   
+높은 정확도와 빠른 생성 속도의 점자 엔진, "한점 두점"을 소개합니다.   
 점자교정사 자격시험 정답율 80점을 달성할 정도로 높은 정확도를 자랑합니다.   
 20 tokens/s 이상의 속도로 점자를 생성할 수 있는 점역엔진입니다.   
 점자시장은 산업 파이가 작고 기술 개발이 어려워 하드웨어 개발에 그치는 경우가 많았는데요,   
@@ -59,6 +59,8 @@ If you need access to the inference server, please create an issue to get in tou
 ```bash 
 docker compose up -d streamlit
 ```
+
+You can access the Streamlit app at `http://localhost:8501`.
 
 ### 직접 설치
 
