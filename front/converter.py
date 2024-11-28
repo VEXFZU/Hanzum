@@ -5,7 +5,10 @@ import requests
 def translate_to_braille(text, st):
     print("Text to be translated:", text)  # 전송할 텍스트 확인용
     try:
-        response = requests.post(st.session_state.api_url, json={"input_text": text})
+        response = requests.post(st.session_state.api_url,
+                                 timeout=120,
+                                 json={"input_text": text},
+                                 )
         response.raise_for_status()  # 에러 발생 시 예외 발생
         braille_text = response.json().get("prediction", "")
         print(braille_text)
