@@ -1,0 +1,23 @@
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - VXFZ_TRANSLATOR_MODEL=${VXFZ_TRANSLATOR_MODEL}
+      - VXFZ_TRANSLATOR_MODEL_T5_NAME=${VXFZ_TRANSLATOR_MODEL_T5_NAME}
+      - VXFZ_TRANSALTOR_MODEL_T5_MAX_LENGTH=${VXFZ_TRANSALTOR_MODEL_T5_MAX_LENGTH}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  streamlit:
+    build:
+      context: ./front
+    ports:
+      - "8501:8501"
