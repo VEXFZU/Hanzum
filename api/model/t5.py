@@ -12,20 +12,20 @@ tokenizer = AutoTokenizer.from_pretrained(_model_name_or_path)
 def split_sentence_with_tokenizer(sentence):
     words = sentence.split()
     result = []
-    start, end = 0, len(words)
+    current_chunk = []
 
-    while start < len(words):
-        low, high = start, end
-        while low < high:
-            mid = (low + high) // 2
-            chunk = " ".join(words[start:mid + 1])
-            tokenized = tokenizer(chunk, return_tensors='pt', max_length=_max_length, truncation=True)
-            if tokenized.input_ids.shape[1] <= _max_input_length:
-                low = mid + 1
-            else:
-                high = mid
-        result.append(" ".join(words[start:low]))
-        start = low
+    for word in words:
+        current_chunk.append(word)
+        chunk = " ".join(current_chunk)
+        tokenized = tokenizer(chunk, return_tensors='pt', max_length=_max_length, truncation=True)
+
+        if tokenized.input_ids.shape[1] > _max_input_length:
+            current_chunk.pop()
+            result.append(" ".join(current_chunk))
+            current_chunk = [word]
+
+    if current_chunk:
+        result.append(" ".join(current_chunk))
 
     return result
 

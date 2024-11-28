@@ -1,6 +1,7 @@
 import streamlit as st
 from document import extract_text_from_pdf, extract_text_from_docx
 from split_merge import temp_merge_results, temp_gather_results
+import chardet
 
 st.title("한국어 점자 번역기⠨⠎⠢⠨")
 
@@ -25,17 +26,22 @@ def process_uploaded_file(uploaded_file):
         return None
     file_type = uploaded_file.name.split('.')[-1]
 
+    ret = None
     if file_type == 'pdf':
-        text = extract_text_from_pdf(uploaded_file)
+        ret = extract_text_from_pdf(uploaded_file)
     elif file_type == 'txt':
-        text = uploaded_file.read().decode("utf-8")
+        chardet_ret = chardet.detect(uploaded_file.read())  # 인코딩 추정
+        encoding = chardet_ret['encoding']
+        uploaded_file.seek(0)
+        ret = uploaded_file.read().decode(encoding)
     elif file_type == 'docx':
-        text = extract_text_from_docx(uploaded_file)
-    else:
+        ret = extract_text_from_docx(uploaded_file)
+
+    if ret is None:
         st.error("지원하지 않는 파일 형식입니다.")
         st.stop()
 
-    return text
+    return ret
 
 
 st.write("PDF, TXT 또는 DOCX 파일을 업로드하여 점자로 변환해보세요.")
